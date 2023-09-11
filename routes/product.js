@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
     });
     await newProduct.save();
     res.status(200).send(newProduct);
-  } catch {
+  } catch (error) {
     res.status(400).send({ message: error._message });
   }
 });
