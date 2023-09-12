@@ -3,67 +3,67 @@ const router = express.Router();
 
 const Product = require("../models/product");
 
-router.get("/", async (req, res) => {
+router.get("/", async (request, response) => {
   try {
-    const { category } = req.query;
+    const { category } = request.query;
     let filter = {};
     if (category) {
       filter.category = category;
     }
-    res.status(200).send(await Product.find(filter).sort({ _id: -1 }));
+    response.status(200).send(await Product.find(filter).sort({ _id: -1 }));
   } catch (error) {
-    res.status(400).send({ message: "Product not found" });
+    response.status(400).send({ message: "Product not found" });
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (request, response) => {
   try {
-    const data = await Product.findOne({ _id: req.params.id });
-    res.status(200).send(data);
+    const data = await Product.findOne({ _id: request.params.id });
+    response.status(200).send(data);
   } catch (error) {
-    res.status(400).send({ message: "Product ID not found" });
+    response.status(400).send({ message: "Product ID not found" });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (request, response) => {
   try {
     const newProduct = new Product({
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
+      name: request.body.name,
+      description: request.body.description,
+      price: request.body.price,
+      category: request.body.category,
     });
     await newProduct.save();
-    res.status(200).send(newProduct);
+    response.status(200).send(newProduct);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (request, response) => {
   try {
-    const product_id = req.params.id;
+    const product_id = request.params.id;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       product_id,
-      req.body,
+      request.body,
       {
         new: true,
       }
     );
-    res.status(200).send(updatedProduct);
+    response.status(200).send(updatedProduct);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (request, response) => {
   try {
-    const product_id = req.params.id;
+    const product_id = request.params.id;
     const deletePro = await Product.findByIdAndDelete(product_id);
-    res.status(200).send(deletePro);
+    response.status(200).send(deletePro);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 

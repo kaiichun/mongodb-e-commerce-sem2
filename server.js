@@ -22,15 +22,19 @@ app.use(corsHandler);
 // MongoDB Connection
 mongoose
   .connect("mongodb://127.0.0.1:27017/ecommerce")
-  .then(() => console.log("MongoDB Connected or not ... "))
+  .then(() => console.log("E-Commerce MongoDB is Connected... "))
   .catch((err) => console.log(err));
 
 // routes
 const orderRouter = require("./routes/order");
 const productRouter = require("./routes/product");
+const imageRouter = require("./routes/image");
 
 app.use("/orders", orderRouter);
 app.use("/products", productRouter);
+app.use("/images", imageRouter);
+
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (request, response) => {
   response.send("E-Commerce");

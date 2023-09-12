@@ -3,67 +3,67 @@ const router = express.Router();
 
 const Order = require("../models/order");
 
-router.get("/", async (req, res) => {
+router.get("/", async (request, response) => {
   try {
-    const { status } = req.query;
+    const { status } = request.query;
     let filter = {};
 
     if (status) {
       filter.status = status;
     }
-    res.status(200).send(await Order.find(filter).populate("products"));
+    response.status(200).send(await Order.find(filter).populate("products"));
   } catch (error) {
-    res.status(400).send({ message: "Order not found" });
+    response.status(400).send({ message: "Order not found" });
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (request, response) => {
   try {
-    const data = await Order.findOne({ _id: req.params.id });
-    res.status(200).send(data);
+    const data = await Order.findOne({ _id: request.params.id });
+    response.status(200).send(data);
   } catch (error) {
-    res.status(400).send({ message: "Order not found" });
+    response.status(400).send({ message: "Order not found" });
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (request, response) => {
   try {
     const newOrder = new Order({
-      customerName: req.body.customerName,
-      customerEmail: req.body.customerEmail,
-      products: req.body.products,
-      totalPrice: req.body.totalPrice,
-      status: req.body.status,
+      customerName: request.body.customerName,
+      customerEmail: request.body.customerEmail,
+      products: request.body.products,
+      totalPrice: request.body.totalPrice,
+      status: request.body.status,
     });
 
     await newOrder.save();
-    res.status(200).send(newOrder);
+    response.status(200).send(newOrder);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (request, response) => {
   try {
-    const order_id = req.params.id;
+    const order_id = request.params.id;
 
-    const updatedOrder = await Order.findByIdAndUpdate(order_id, req.body, {
+    const updatedOrder = await Order.findByIdAndUpdate(order_id, request.body, {
       new: true,
     });
-    res.status(200).send(updatedOrder);
+    response.status(200).send(updatedOrder);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (request, response) => {
   try {
-    const order_id = req.params.id;
+    const order_id = request.params.id;
 
     const deleteOrder = await Order.findByIdAndDelete(order_id);
-    res.status(200).send(deleteOrder);
+    response.status(200).send(deleteOrder);
   } catch (error) {
-    res.status(400).send({ message: error._message });
+    response.status(400).send({ message: error._message });
   }
 });
 
