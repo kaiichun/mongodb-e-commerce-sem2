@@ -32,6 +32,7 @@ router.post("/", async (request, response) => {
       description: request.body.description,
       price: request.body.price,
       category: request.body.category,
+      image: request.body.image,
     });
     await newProduct.save();
     response.status(200).send(newProduct);
