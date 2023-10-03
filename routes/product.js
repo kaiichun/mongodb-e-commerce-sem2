@@ -2,14 +2,21 @@ const express = require("express");
 const router = express.Router();
 
 const Product = require("../models/product");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
+
+const authMiddleware = require("../middleware/auth");
+const isAdminMiddleware = require("../middleware/isAdmin");
 
 router.get("/", async (request, response) => {
   try {
     const { category } = request.query;
     let filter = {};
+
     if (category) {
       filter.category = category;
     }
+
     response.status(200).send(await Product.find(filter).sort({ _id: -1 }));
   } catch (error) {
     response.status(400).send({ message: "Product not found" });
@@ -25,7 +32,7 @@ router.get("/:id", async (request, response) => {
   }
 });
 
-router.post("/", async (request, response) => {
+router.post("/", isAdminMiddleware, async (request, response) => {
   try {
     const newProduct = new Product({
       name: request.body.name,
@@ -41,7 +48,7 @@ router.post("/", async (request, response) => {
   }
 });
 
-router.put("/:id", async (request, response) => {
+router.put("/:id", isAdminMiddleware, async (request, response) => {
   try {
     const product_id = request.params.id;
 
@@ -58,7 +65,7 @@ router.put("/:id", async (request, response) => {
   }
 });
 
-router.delete("/:id", async (request, response) => {
+router.delete("/:id", isAdminMiddleware, async (request, response) => {
   try {
     const product_id = request.params.id;
     const deletePro = await Product.findByIdAndDelete(product_id);
