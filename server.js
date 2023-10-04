@@ -7,7 +7,7 @@ const { MONGODB_URL } = require("./config");
 // middleware to handle JSON request
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const port = 8880;
+const port = 5001;
 
 // setup cors
 const corsHandler = cors({
