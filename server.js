@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const { MONGODB_URL } = require("./config");
 
 // middleware to handle JSON request
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +22,7 @@ app.use(corsHandler);
 
 // MongoDB Connection
 mongoose
-  .connect("mongodb://127.0.0.1:27017/ecommerce")
+  .connect(MONGODB_URL + "ecommerce")
   .then(() => console.log("E-Commerce MongoDB is Connected... "))
   .catch((err) => console.log(err));
 
